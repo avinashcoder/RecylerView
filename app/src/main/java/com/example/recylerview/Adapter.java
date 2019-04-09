@@ -65,14 +65,31 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Viewholder> {
         }
 
         private void setData(String profileUrl, String name, String city, String dayUploaded, String postDescription, String postImgUrl, int totalLike, int totalComment){
-            Uri uriprofile= Uri.parse(profileUrl);
-            uploaderprofilepic.setImageURI(uriprofile);
-            Uri uripostimg=Uri.parse(postImgUrl);
-            uploadedPostImage.setImageURI(uripostimg);
+            if(profileUrl.equals("default")) {
+                uploaderprofilepic.setImageResource(R.drawable.ic_launcher_foreground);
+            }
+            else {
+                Uri uriprofile= Uri.parse(profileUrl);
+                uploaderprofilepic.setImageURI(uriprofile);
+            }
+
+            if(postImgUrl.equals("default")) {
+                uploadedPostImage.setVisibility(View.GONE);
+            }
+            else {
+                Uri uripostimg = Uri.parse(postImgUrl);
+                uploadedPostImage.setImageURI(uripostimg);
+            }
             uploaderName.setText(name);
             uploaderCity.setText(city);
             uploadedDay.setText(dayUploaded);
-            uploadedPostDesciption.setText(postDescription);
+            if(postDescription.equals("default")) {
+                uploadedPostDesciption.setVisibility(View.GONE);
+            }
+            else {
+                uploadedPostDesciption.setText(postDescription);
+            }
+
             totalLikes.setText(String.valueOf(totalLike));
             totalComments.setText(String.valueOf(totalComment));
 
