@@ -1,5 +1,6 @@
 package com.example.recylerview;
 
+import android.content.Context;
 import android.net.Uri;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -14,17 +15,27 @@ import java.net.URI;
 import java.util.List;
 
 public class Adapter extends RecyclerView.Adapter<Adapter.Viewholder> {
-
+    private Context mContext;
     private List<ModalClass> modalClassList;
+    private OnItemClickListener mListener;
 
-    public Adapter(List<ModalClass> modalClassList) {
+    public interface OnItemClickListener{
+        void onItemClick(int position);
+    }
+
+    public void setOnItemClickListener(OnItemClickListener listener){
+        mListener = listener;
+    }
+
+    public Adapter(Context context, List<ModalClass> modalClassList) {
+        mContext = context;
         this.modalClassList = modalClassList;
     }
 
     @NonNull
     @Override
     public Viewholder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
-        View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_layout,viewGroup,false);
+        View view = LayoutInflater.from(mContext).inflate(R.layout.item_layout,viewGroup,false);
         return new Viewholder(view);
     }
 
@@ -62,6 +73,18 @@ public class Adapter extends RecyclerView.Adapter<Adapter.Viewholder> {
             uploadedPostDesciption=itemView.findViewById(R.id.card_view_post_description);
             totalLikes=itemView.findViewById(R.id.card_view_post_total_likes);
             totalComments=itemView.findViewById(R.id.card_view_post_total_comments);
+
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if(mListener != null){
+                        int position = getAdapterPosition();
+                        if(position!= RecyclerView.NO_POSITION){
+                            mListener.onItemClick(position);
+                        }
+                    }
+                }
+            });
         }
 
         private void setData(String profileUrl, String name, String city, String dayUploaded, String postDescription, String postImgUrl, int totalLike, int totalComment){
